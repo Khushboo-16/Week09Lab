@@ -1,4 +1,4 @@
-package database;
+package dataaccess;
 
 import models.User;
 import java.sql.Connection;
