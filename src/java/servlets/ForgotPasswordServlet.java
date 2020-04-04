@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import services.AccountService;
 
 /**
  *
@@ -29,7 +30,7 @@ public class ForgotPasswordServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+       // response.setContentType("text/html;charset=UTF-8");
         
     }
 
@@ -61,7 +62,17 @@ public class ForgotPasswordServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        // processRequest(request, response);
-       getServletContext().getRequestDispatcher("/WEB-INF/forgot.jsp").forward(request, response);
+        AccountService as = new AccountService();
+        String email = request.getParameter("email");
+        boolean forgot = as.forgotPassword(email);
+        
+        if(forgot) {
+            request.setAttribute("msg", "An e-mail has been sent containing your login credentials.");
+        }
+        else {
+            request.setAttribute("msg", "Error encountered on sending email. Please contact administrator.");
+            getServletContext().getRequestDispatcher("/WEB-INF/forgot.jsp").forward(request, response);
+        }   
     }
 
     /**
